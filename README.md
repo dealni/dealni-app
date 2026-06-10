@@ -32,9 +32,21 @@ npm run dev
 
 Acesse em: [http://localhost:5173](http://localhost:5173)
 
+## Testes
+
+Os testes usam [Vitest](https://vitest.dev/) (test runner com API compatível com Jest, nativo para projetos Vite) com [Testing Library](https://testing-library.com/):
+
+```bash
+npm test         # roda a suíte uma vez
+npm run test:watch  # roda em modo watch durante o desenvolvimento
+```
+
+Cobertura atual: serviço da OpenAI (streaming SSE, erros, timeout), formatação das mensagens e fluxo completo do chat (envio, streaming, retry, sugestões, persistência).
+
 ## Funcionalidades
 
 - Chat em tempo real com o Dealni (gpt-4.1-nano)
+- Respostas em **streaming**: o texto surge aos poucos, como no Claude/ChatGPT
 - Histórico de conversa com contexto
 - Indicador "digitando..." nas bolhas e no header enquanto aguarda resposta
 - Persistência com `localStorage` (dados permanecem após recarregar)

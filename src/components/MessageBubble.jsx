@@ -37,7 +37,8 @@ export default function MessageBubble({ message }) {
             )}
             <div className={`message-bubble ${isUser ? 'message-bubble--user' : 'message-bubble--bot'}`}>
                 <p className="message-text">{isUser ? message.text : formatText(message.text)}</p>
-                <span className="message-time">{message.time}</span>
+                {/* A mensagem em streaming ainda não tem horário definido */}
+                {message.time && <span className="message-time">{message.time}</span>}
             </div>
         </div>
     )

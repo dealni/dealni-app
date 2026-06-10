@@ -9,15 +9,15 @@ const SUGGESTIONS = [
     'Explique um conceito de forma simples',
 ]
 
-export default function ChatWindow({ messages, isTyping, onSuggestion }) {
+export default function ChatWindow({ messages, isTyping, streamingText, onSuggestion }) {
     // Referência ao elemento invisível no final da lista, usado para o scroll automático
     const bottomRef = useRef(null)
 
-    // Sempre que uma mensagem nova chegar (ou o Dealni começar a digitar),
+    // Sempre que uma mensagem nova chegar (ou o Dealni começar a digitar/responder),
     // rola suavemente até o fim da conversa
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }, [messages, isTyping])
+    }, [messages, isTyping, streamingText])
 
     return (
         <div className="chat-window">
@@ -44,8 +44,13 @@ export default function ChatWindow({ messages, isTyping, onSuggestion }) {
                 <MessageBubble key={msg.id} message={msg} />
             ))}
 
-            {/* Mostra a animação de digitação enquanto aguarda a resposta da API */}
-            {isTyping && <TypingIndicator />}
+            {/* Resposta parcial em streaming: o texto vai surgindo conforme chega */}
+            {streamingText != null && (
+                <MessageBubble message={{ from: 'bot', text: streamingText }} />
+            )}
+
+            {/* Animação de digitação enquanto aguarda o primeiro chunk da resposta */}
+            {isTyping && streamingText == null && <TypingIndicator />}
 
             {/* Elemento âncora para o scroll automático */}
             <div ref={bottomRef} />

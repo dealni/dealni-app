@@ -31,8 +31,12 @@ export default function App() {
     // Estado principal: lista de todas as mensagens do chat
     const [messages, setMessages] = useState(loadHistory)
 
-    // Controla se o Dealni está "digitando" (aguardando resposta da API)
+    // Controla se o Dealni está "digitando" (aguardando ou recebendo resposta da API)
     const [isTyping, setIsTyping] = useState(false)
+
+    // Texto parcial da resposta enquanto o streaming está em andamento.
+    // Fica fora de `messages` para não salvar no localStorage a cada chunk.
+    const [streamingText, setStreamingText] = useState(null)
 
     // Armazena a mensagem de erro caso a API falhe
     const [error, setError] = useState(null)
@@ -53,8 +57,9 @@ export default function App() {
         setError(null)
 
         try {
-            // Envia todo o histórico como contexto para a API manter a conversa coerente
-            const reply = await sendMessage(history)
+            // Envia todo o histórico como contexto; o texto parcial vai sendo
+            // exibido na tela conforme chega (streaming)
+            const reply = await sendMessage(history, setStreamingText)
             const botMsg = { id: getId(), from: 'bot', text: reply, time: getTime() }
             setMessages((prev) => [...prev, botMsg])
         } catch (err) {
@@ -62,6 +67,7 @@ export default function App() {
             setError(err.message || 'Erro ao conectar com a API.')
         } finally {
             setIsTyping(false)
+            setStreamingText(null)
         }
     }
 
@@ -96,7 +102,12 @@ export default function App() {
                         </button>
                     )}
                 </div>
-                <ChatWindow messages={messages} isTyping={isTyping} onSuggestion={handleSend} />
+                <ChatWindow
+                    messages={messages}
+                    isTyping={isTyping}
+                    streamingText={streamingText}
+                    onSuggestion={handleSend}
+                />
                 {error && (
                     <div className="chat-error">
                         <span>❌ {error}</span>

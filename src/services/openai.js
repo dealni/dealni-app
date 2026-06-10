@@ -38,11 +38,34 @@ function truncate(text) {
     return lastSpace > 0 ? cut.substring(0, lastSpace) : cut
 }
 
-// Tempo máximo de espera pela resposta da API antes de desistir
+// Tempo máximo sem receber nenhum dado antes de desistir (renovado a cada chunk do stream)
 const TIMEOUT_MS = 60_000
 
-// Recebe o histórico completo da conversa e retorna a resposta do Dealni
-export async function sendMessage(history) {
+// Extrai os trechos de texto de um bloco de linhas SSE ("data: {...}") da OpenAI.
+// Devolve a concatenação dos deltas encontrados nas linhas completas recebidas.
+function parseSSE(lines) {
+    let text = ''
+    for (const line of lines) {
+        const trimmed = line.trim()
+        // Linhas úteis começam com "data:"; o restante (comentários, vazias) é ignorado
+        if (!trimmed.startsWith('data:')) continue
+        const payload = trimmed.slice(5).trim()
+        // "[DONE]" marca o fim do stream e não é JSON
+        if (payload === '[DONE]') continue
+        try {
+            const delta = JSON.parse(payload)?.choices?.[0]?.delta?.content
+            if (delta) text += delta
+        } catch {
+            // Linha malformada: ignora e segue o stream
+        }
+    }
+    return text
+}
+
+// Recebe o histórico completo da conversa e retorna a resposta do Dealni.
+// A resposta chega em streaming: onChunk(textoParcial) é chamado a cada trecho
+// recebido, permitindo exibir o texto surgindo aos poucos na tela.
+export async function sendMessage(history, onChunk) {
     if (!API_KEY) {
         throw new Error('Chave da API não configurada. Crie um arquivo .env com VITE_OPENAI_API_KEY.')
     }
@@ -60,43 +83,88 @@ export async function sendMessage(history) {
         })),
     ]
 
-    // Cancela a requisição se demorar demais, em vez de deixar o chat travado em "digitando..."
+    // Cancela a requisição se ficar tempo demais sem receber dados,
+    // em vez de deixar o chat travado em "digitando..."
     const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS)
+    let timeout = setTimeout(() => controller.abort(), TIMEOUT_MS)
+    const renewTimeout = () => {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => controller.abort(), TIMEOUT_MS)
+    }
 
-    let response
     try {
-        response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${API_KEY}`,
-            },
-            body: JSON.stringify({
-                model: 'gpt-4.1-nano',
-                messages,
-                temperature: 1,         // Criatividade: 0 = determinístico, 2 = muito criativo
-                max_completion_tokens: 2048,
-            }),
-            signal: controller.signal,
-        })
-    } catch (err) {
-        if (err.name === 'AbortError') {
-            throw new Error('A resposta demorou demais. Tente novamente.')
+        let response
+        try {
+            response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${API_KEY}`,
+                },
+                body: JSON.stringify({
+                    model: 'gpt-4.1-nano',
+                    messages,
+                    temperature: 1,         // Criatividade: 0 = determinístico, 2 = muito criativo
+                    max_completion_tokens: 2048,
+                    stream: true,           // Recebe a resposta aos poucos via Server-Sent Events
+                }),
+                signal: controller.signal,
+            })
+        } catch (err) {
+            if (err.name === 'AbortError') {
+                throw new Error('A resposta demorou demais. Tente novamente.')
+            }
+            throw new Error('Sem conexão com a internet ou API indisponível.')
         }
-        throw new Error('Sem conexão com a internet ou API indisponível.')
+
+        if (!response.ok) {
+            // Mesmo com stream:true, erros vêm como JSON normal (e podem nem ter corpo)
+            const err = await response.json().catch(() => null)
+            throw new Error(err?.error?.message || `Erro ao contatar a API (${response.status}).`)
+        }
+
+        // Lê o corpo da resposta em chunks e acumula o texto conforme chega
+        const reader = response.body.getReader()
+        const decoder = new TextDecoder()
+        let buffer = ''
+        let fullText = ''
+
+        while (true) {
+            let chunk
+            try {
+                chunk = await reader.read()
+            } catch (err) {
+                if (err.name === 'AbortError') {
+                    throw new Error('A resposta demorou demais. Tente novamente.')
+                }
+                throw new Error('Conexão interrompida no meio da resposta. Tente novamente.')
+            }
+            if (chunk.done) break
+            renewTimeout()
+
+            // Acumula no buffer e processa apenas as linhas completas;
+            // a última linha pode estar cortada no meio e fica para o próximo chunk
+            buffer += decoder.decode(chunk.value, { stream: true })
+            const lines = buffer.split('\n')
+            buffer = lines.pop()
+
+            const delta = parseSSE(lines)
+            if (delta) {
+                fullText += delta
+                onChunk?.(fullText)
+            }
+        }
+
+        // Processa o que sobrou no buffer após o fim do stream
+        const rest = parseSSE([buffer])
+        if (rest) {
+            fullText += rest
+            onChunk?.(fullText)
+        }
+
+        if (!fullText) throw new Error('Resposta vazia da API.')
+        return fullText
     } finally {
         clearTimeout(timeout)
     }
-
-    if (!response.ok) {
-        // A API pode devolver erro sem corpo JSON (ex: gateway), então o parse é defensivo
-        const err = await response.json().catch(() => null)
-        throw new Error(err?.error?.message || `Erro ao contatar a API (${response.status}).`)
-    }
-
-    const data = await response.json()
-    const content = data?.choices?.[0]?.message?.content
-    if (!content) throw new Error('Resposta vazia da API.')
-    return content
 }
