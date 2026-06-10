@@ -36,9 +36,13 @@ Acesse em: [http://localhost:5173](http://localhost:5173)
 
 - Chat em tempo real com o Dealni (gpt-4.1-nano)
 - Histórico de conversa com contexto
-- Indicador "digitando..." enquanto aguarda resposta
+- Indicador "digitando..." nas bolhas e no header enquanto aguarda resposta
 - Persistência com `localStorage` (dados permanecem após recarregar)
-- Tratamento de erros de rede/API
+- Tratamento de erros de rede/API com botão "Tentar novamente"
+- Timeout de 60s para requisições que demoram demais
+- Formatação básica nas respostas: **negrito**, `código` e links clicáveis
+- Campo de mensagem que cresce conforme o texto (auto-resize)
+- Confirmação antes de limpar a conversa
 - Design inspirado no Telegram (tema escuro)
 - Responsivo para mobile
 

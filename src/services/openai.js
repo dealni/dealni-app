@@ -38,8 +38,15 @@ function truncate(text) {
     return lastSpace > 0 ? cut.substring(0, lastSpace) : cut
 }
 
+// Tempo máximo de espera pela resposta da API antes de desistir
+const TIMEOUT_MS = 60_000
+
 // Recebe o histórico completo da conversa e retorna a resposta do Dealni
 export async function sendMessage(history) {
+    if (!API_KEY) {
+        throw new Error('Chave da API não configurada. Crie um arquivo .env com VITE_OPENAI_API_KEY.')
+    }
+
     // Usa apenas as últimas CONTEXT_LIMIT mensagens para não estourar tokens
     const recent = history.slice(-CONTEXT_LIMIT)
 
@@ -53,23 +60,39 @@ export async function sendMessage(history) {
         })),
     ]
 
-    const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${API_KEY}`,
-        },
-        body: JSON.stringify({
-            model: 'gpt-4.1-nano',
-            messages,
-            temperature: 1,         // Criatividade: 0 = determinístico, 2 = muito criativo
-            max_completion_tokens: 2048,
-        }),
-    })
+    // Cancela a requisição se demorar demais, em vez de deixar o chat travado em "digitando..."
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS)
+
+    let response
+    try {
+        response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${API_KEY}`,
+            },
+            body: JSON.stringify({
+                model: 'gpt-4.1-nano',
+                messages,
+                temperature: 1,         // Criatividade: 0 = determinístico, 2 = muito criativo
+                max_completion_tokens: 2048,
+            }),
+            signal: controller.signal,
+        })
+    } catch (err) {
+        if (err.name === 'AbortError') {
+            throw new Error('A resposta demorou demais. Tente novamente.')
+        }
+        throw new Error('Sem conexão com a internet ou API indisponível.')
+    } finally {
+        clearTimeout(timeout)
+    }
 
     if (!response.ok) {
-        const err = await response.json()
-        throw new Error(err?.error?.message || 'Erro ao contatar a API.')
+        // A API pode devolver erro sem corpo JSON (ex: gateway), então o parse é defensivo
+        const err = await response.json().catch(() => null)
+        throw new Error(err?.error?.message || `Erro ao contatar a API (${response.status}).`)
     }
 
     const data = await response.json()

@@ -120,6 +120,11 @@ body {
     color: var(--accent);
 }
 
+.chat-header-status--typing {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
 .btn-clear {
     background: none;
     border: none;
@@ -285,6 +290,19 @@ body {
     white-space: pre-wrap;
 }
 
+.message-text code {
+    background: rgba(0, 0, 0, 0.35);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 13px;
+}
+
+.message-text a {
+    color: var(--accent-hover);
+    word-break: break-all;
+}
+
 .message-time {
     display: block;
     text-align: right;
@@ -335,6 +353,11 @@ body {
 
 /* ─── Erro ─────────────────────────────────────────────────── */
 .chat-error {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
     margin: 0 16px 8px;
     padding: 10px 14px;
     background: var(--error-bg);
@@ -342,6 +365,29 @@ body {
     border-radius: 10px;
     font-size: 13px;
     border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.btn-retry {
+    background: none;
+    border: 1px solid var(--error-text);
+    color: var(--error-text);
+    border-radius: 16px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-retry:hover:not(:disabled) {
+    background: var(--error-text);
+    color: var(--error-bg);
+}
+
+.btn-retry:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* ─── Input bar ────────────────────────────────────────────── */
