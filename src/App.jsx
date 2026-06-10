@@ -96,7 +96,7 @@ export default function App() {
                         </button>
                     )}
                 </div>
-                <ChatWindow messages={messages} isTyping={isTyping} />
+                <ChatWindow messages={messages} isTyping={isTyping} onSuggestion={handleSend} />
                 {error && (
                     <div className="chat-error">
                         <span>❌ {error}</span>

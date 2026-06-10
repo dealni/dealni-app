@@ -2,7 +2,14 @@ import { useEffect, useRef } from 'react'
 import MessageBubble from './MessageBubble'
 import TypingIndicator from './TypingIndicator'
 
-export default function ChatWindow({ messages, isTyping }) {
+// Sugestões de prompt exibidas na tela inicial, como nos chats do Claude/ChatGPT
+const SUGGESTIONS = [
+    'Me conte uma curiosidade sobre gatos 🐱',
+    'Me ajude a escrever uma mensagem',
+    'Explique um conceito de forma simples',
+]
+
+export default function ChatWindow({ messages, isTyping, onSuggestion }) {
     // Referência ao elemento invisível no final da lista, usado para o scroll automático
     const bottomRef = useRef(null)
 
@@ -18,8 +25,17 @@ export default function ChatWindow({ messages, isTyping }) {
             {messages.length === 0 && (
                 <div className="chat-empty">
                     <span className="chat-empty-icon">😼</span>
-                    <p>Oi! Eu sou o <strong>Dealni</strong>, um gato inteligente.</p>
-                    <p>Manda uma mensagem pra começar! 💬</p>
+                    <h1 className="chat-empty-title">Oi! Como posso ajudar?</h1>
+                    <p className="chat-empty-subtitle">
+                        Eu sou o <strong>Dealni</strong>, um gato inteligente.
+                    </p>
+                    <div className="chat-suggestions">
+                        {SUGGESTIONS.map((s) => (
+                            <button key={s} className="chat-suggestion" onClick={() => onSuggestion(s)}>
+                                {s}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             )}
 

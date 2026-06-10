@@ -43,7 +43,8 @@ Acesse em: [http://localhost:5173](http://localhost:5173)
 - Formatação básica nas respostas: **negrito**, `código` e links clicáveis
 - Campo de mensagem que cresce conforme o texto (auto-resize)
 - Confirmação antes de limpar a conversa
-- Design inspirado no Telegram (tema escuro)
+- Design inspirado nos chats do Claude e do ChatGPT (tema claro e escuro automático)
+- Tela inicial com sugestões de prompt clicáveis
 - Responsivo para mobile
 
 ## Tecnologias

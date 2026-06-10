@@ -47,27 +47,34 @@ export default function InputBar({ onSend, disabled }) {
 
     return (
         <form className="input-bar" onSubmit={handleSubmit}>
-            <textarea
-                ref={textareaRef}
-                className="input-bar__textarea"
-                placeholder="Escreva uma mensagem..."
-                value={text}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                disabled={disabled}
-                rows={1}
-                autoFocus
-            />
-            <button
-                className="input-bar__btn"
-                type="submit"
-                disabled={disabled || !text.trim()}
-                aria-label="Enviar"
-            >
-                <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
-                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                </svg>
-            </button>
+            {/* Caixa arredondada com o botão dentro, no estilo Claude/ChatGPT */}
+            <div className="input-bar__box">
+                <textarea
+                    ref={textareaRef}
+                    className="input-bar__textarea"
+                    placeholder="Pergunte alguma coisa..."
+                    value={text}
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
+                    disabled={disabled}
+                    rows={1}
+                    autoFocus
+                />
+                <button
+                    className="input-bar__btn"
+                    type="submit"
+                    disabled={disabled || !text.trim()}
+                    aria-label="Enviar"
+                >
+                    {/* Seta para cima, como o botão de enviar do Claude/ChatGPT */}
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                        <path d="M12 4a1 1 0 0 1 .7.3l6.3 6.3-1.4 1.4-4.6-4.6V20h-2V7.4l-4.6 4.6-1.4-1.4 6.3-6.3A1 1 0 0 1 12 4z" />
+                    </svg>
+                </button>
+            </div>
+            <span className="input-bar__hint">
+                O Dealni pode cometer erros. Considere verificar informações importantes.
+            </span>
         </form>
     )
 }
