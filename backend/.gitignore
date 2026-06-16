@@ -1,1 +1,4 @@
 node_modules
+
+# Banco local (gerado a partir do SEED em db.js na primeira execução)
+data.json
