@@ -1,21 +1,31 @@
 import dealniAvatar from '../assets/hero.jpg'
 
-// Exibe uma bolha de mensagem individual.
-// A aparência muda dependendo de quem enviou: usuário (direita) ou Dealni (esquerda).
+// Exibe uma mensagem individual.
+// Assistente: largura total, sem balão, com avatar e nome (estilo Claude/ChatGPT).
+// Usuário: balão arredondado alinhado à direita.
 export default function MessageBubble({ message }) {
     const isUser = message.from === 'user'
 
-    return (
-        <div className={`message-row ${isUser ? 'message-row--user' : 'message-row--bot'}`}>
-            {/* Avatar do Dealni aparece só nas mensagens do bot */}
-            {!isUser && (
-                <div className="message-avatar">
-                    <img src={dealniAvatar} alt="Dealni" />
+    if (isUser) {
+        return (
+            <div className="msg msg--user">
+                <div className="msg__bubble">
+                    <p className="msg__text">{message.text}</p>
                 </div>
-            )}
-            <div className={`message-bubble ${isUser ? 'message-bubble--user' : 'message-bubble--bot'}`}>
-                <p className="message-text">{message.text}</p>
-                <span className="message-time">{message.time}</span>
+                <span className="msg__time">{message.time}</span>
+            </div>
+        )
+    }
+
+    return (
+        <div className="msg msg--bot">
+            <div className="msg__avatar">
+                <img src={dealniAvatar} alt="Dealni" />
+            </div>
+            <div className="msg__body">
+                <p className="msg__author">Dealni</p>
+                <p className="msg__text">{message.text}</p>
+                <span className="msg__time">{message.time}</span>
             </div>
         </div>
     )

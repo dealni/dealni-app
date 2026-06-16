@@ -1,16 +1,13 @@
-import dealniAvatar from '../assets/hero.jpg'
-
-// `subtitulo` mostra o título da conversa ativa; cai em "online" quando não informado.
-export default function Header({ subtitulo = 'online' }) {
+// Barra superior fina do chat (estilo Claude/ChatGPT): título da conversa,
+// status e, opcionalmente, ações à direita (passadas via children).
+export default function Header({ titulo = 'Dealni', status = 'online', children }) {
     return (
-        <header className="chat-header">
-            <div className="chat-header-avatar">
-                <img src={dealniAvatar} alt="Dealni" />
+        <header className="chat-topbar">
+            <div className="chat-topbar__info">
+                <span className="chat-topbar__name">{titulo}</span>
+                <span className="chat-topbar__status">{status}</span>
             </div>
-            <div className="chat-header-info">
-                <span className="chat-header-name">Dealni 😼</span>
-                <span className="chat-header-status">{subtitulo}</span>
-            </div>
+            {children && <div className="chat-topbar__actions">{children}</div>}
         </header>
     )
 }

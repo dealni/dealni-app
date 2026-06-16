@@ -57,7 +57,7 @@ export default function MemoriaForm({ memoriaEmEdicao, onSalvar, onCancelar }) {
     return (
         <form className="memoria-form" onSubmit={handleSubmit}>
             <h3 className="memoria-form__titulo">
-                {editando ? '✏️ Editar memória' : '➕ Nova memória'}
+                {editando ? 'Editar memória' : 'Nova memória'}
             </h3>
 
             <label className="campo">

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import MessageBubble from './MessageBubble'
 import TypingIndicator from './TypingIndicator'
+import dealniAvatar from '../assets/hero.jpg'
 
 export default function ChatWindow({ messages, isTyping }) {
     // Referência ao elemento invisível no final da lista, usado para o scroll automático
@@ -12,27 +13,37 @@ export default function ChatWindow({ messages, isTyping }) {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, [messages, isTyping])
 
+    // Tela de boas-vindas (saudação no estilo Claude) enquanto não há mensagens
+    if (messages.length === 0 && !isTyping) {
+        return (
+            <div className="chat-window">
+                <div className="chat-empty">
+                    <span className="chat-empty__mark">
+                        <img src={dealniAvatar} alt="Dealni" />
+                    </span>
+                    <h2 className="chat-empty__title">Olá! Eu sou o Dealni</h2>
+                    <p className="chat-empty__subtitle">
+                        Um assistente de IA com jeito de gato. Manda uma mensagem para começarmos a conversar.
+                    </p>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="chat-window">
-            {/* Tela de boas-vindas exibida enquanto não há mensagens */}
-            {messages.length === 0 && (
-                <div className="chat-empty">
-                    <span className="chat-empty-icon">😼</span>
-                    <p>Oi! Eu sou o <strong>Dealni</strong>, um gato inteligente.</p>
-                    <p>Manda uma mensagem pra começar! 💬</p>
-                </div>
-            )}
+            <div className="chat-window__inner">
+                {/* Renderiza uma mensagem para cada item do histórico */}
+                {messages.map((msg) => (
+                    <MessageBubble key={msg.id} message={msg} />
+                ))}
 
-            {/* Renderiza uma bolha para cada mensagem do histórico */}
-            {messages.map((msg) => (
-                <MessageBubble key={msg.id} message={msg} />
-            ))}
+                {/* Animação de digitação enquanto aguarda a resposta da API */}
+                {isTyping && <TypingIndicator />}
 
-            {/* Mostra a animação de digitação enquanto aguarda a resposta da API */}
-            {isTyping && <TypingIndicator />}
-
-            {/* Elemento âncora para o scroll automático */}
-            <div ref={bottomRef} />
+                {/* Elemento âncora para o scroll automático */}
+                <div ref={bottomRef} />
+            </div>
         </div>
     )
 }

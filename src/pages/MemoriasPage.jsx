@@ -36,24 +36,26 @@ export default function MemoriasPage() {
 
     return (
         <div className="page">
-            <h2 className="page__titulo">🧠 Memórias</h2>
-            <p className="page__subtitulo">
-                Cadastre fatos que o Dealni deve lembrar. Eles são enviados como contexto em todas as conversas.
-            </p>
+            <div className="page__inner">
+                <h2 className="page__titulo">Memórias</h2>
+                <p className="page__subtitulo">
+                    Cadastre fatos que o Dealni deve lembrar. Eles são enviados como contexto em todas as conversas.
+                </p>
 
-            <MemoriaForm
-                memoriaEmEdicao={emEdicao}
-                onSalvar={handleSalvar}
-                onCancelar={() => setEmEdicao(null)}
-            />
+                <MemoriaForm
+                    memoriaEmEdicao={emEdicao}
+                    onSalvar={handleSalvar}
+                    onCancelar={() => setEmEdicao(null)}
+                />
 
-            <ErrorBanner mensagem={acaoErro || erro} onRetry={erro ? recarregar : undefined} />
+                <ErrorBanner mensagem={acaoErro || erro} onRetry={erro ? recarregar : undefined} />
 
-            {carregando ? (
-                <Loader texto="Carregando memórias..." />
-            ) : (
-                <MemoriaList memorias={memorias} onEditar={setEmEdicao} onExcluir={handleExcluir} />
-            )}
+                {carregando ? (
+                    <Loader texto="Carregando memórias..." />
+                ) : (
+                    <MemoriaList memorias={memorias} onEditar={setEmEdicao} onExcluir={handleExcluir} />
+                )}
+            </div>
         </div>
     )
 }

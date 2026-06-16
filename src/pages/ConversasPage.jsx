@@ -66,37 +66,39 @@ export default function ConversasPage({ activeConversa, onSelecionar }) {
 
     return (
         <div className="page">
-            <h2 className="page__titulo">🗂️ Conversas</h2>
-            <p className="page__subtitulo">
-                Crie e organize suas conversas com o Dealni. Cada conversa tem seu próprio histórico.
-            </p>
+            <div className="page__inner">
+                <h2 className="page__titulo">Conversas</h2>
+                <p className="page__subtitulo">
+                    Crie e organize suas conversas com o Dealni. Cada conversa tem seu próprio histórico.
+                </p>
 
-            <form className="inline-form" onSubmit={handleCriar}>
-                <input
-                    type="text"
-                    value={titulo}
-                    onChange={(e) => setTitulo(e.target.value)}
-                    placeholder="Título da nova conversa"
-                    maxLength={60}
-                />
-                <button type="submit" className="btn btn--primario" disabled={!titulo.trim()}>
-                    Criar conversa
-                </button>
-            </form>
+                <form className="inline-form" onSubmit={handleCriar}>
+                    <input
+                        type="text"
+                        value={titulo}
+                        onChange={(e) => setTitulo(e.target.value)}
+                        placeholder="Título da nova conversa"
+                        maxLength={60}
+                    />
+                    <button type="submit" className="btn btn--primario" disabled={!titulo.trim()}>
+                        Criar conversa
+                    </button>
+                </form>
 
-            <ErrorBanner mensagem={acaoErro || erro} onRetry={erro ? recarregar : undefined} />
+                <ErrorBanner mensagem={acaoErro || erro} onRetry={erro ? recarregar : undefined} />
 
-            {carregando ? (
-                <Loader texto="Carregando conversas..." />
-            ) : (
-                <ConversaList
-                    conversas={conversas}
-                    ativaId={activeConversa?.id}
-                    onAbrir={handleAbrir}
-                    onRenomear={handleRenomear}
-                    onExcluir={handleExcluir}
-                />
-            )}
+                {carregando ? (
+                    <Loader texto="Carregando conversas..." />
+                ) : (
+                    <ConversaList
+                        conversas={conversas}
+                        ativaId={activeConversa?.id}
+                        onAbrir={handleAbrir}
+                        onRenomear={handleRenomear}
+                        onExcluir={handleExcluir}
+                    />
+                )}
+            </div>
         </div>
     )
 }

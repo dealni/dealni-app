@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import ChatWindow from '../components/ChatWindow'
 import InputBar from '../components/InputBar'
+import { IconTrash } from '../components/icons'
 import { sendMessage } from '../services/openai'
 import { getMemorias } from '../services/memoriasService'
 import { getConversas } from '../services/conversasService'
@@ -91,14 +92,13 @@ export default function ChatPage({ activeConversa, onSelecionar }) {
     if (!conversa) {
         return (
             <div className="chat-page">
-                <Header subtitulo="selecione uma conversa" />
+                <Header titulo="Dealni" status="nenhuma conversa aberta" />
                 <div className="chat-window">
                     <div className="chat-empty">
-                        <span className="chat-empty-icon">🗂️</span>
-                        <p>Nenhuma conversa aberta.</p>
-                        <p>
+                        <h2 className="chat-empty__title">Nenhuma conversa aberta</h2>
+                        <p className="chat-empty__subtitle">
                             Vá para <Link to="/conversas" className="link">Conversas</Link> e crie ou
-                            abra uma para começar. 💬
+                            abra uma para começar.
                         </p>
                     </div>
                 </div>
@@ -108,16 +108,20 @@ export default function ChatPage({ activeConversa, onSelecionar }) {
 
     return (
         <div className="chat-page">
-            <div className="chat-header-wrapper">
-                <Header subtitulo={conversa.titulo} />
+            <Header titulo={conversa.titulo} status="online">
                 {messages.length > 0 && (
-                    <button className="btn-clear" onClick={handleClear} title="Limpar mensagens desta conversa">
-                        🗑
+                    <button
+                        className="icon-btn icon-btn--perigo"
+                        onClick={handleClear}
+                        title="Limpar mensagens desta conversa"
+                        aria-label="Limpar mensagens desta conversa"
+                    >
+                        <IconTrash size={18} />
                     </button>
                 )}
-            </div>
+            </Header>
             <ChatWindow messages={messages} isTyping={isTyping} />
-            {error && <div className="chat-error">❌ {error}</div>}
+            {error && <div className="chat-error">{error}</div>}
             <InputBar onSend={handleSend} disabled={isTyping} />
         </div>
     )

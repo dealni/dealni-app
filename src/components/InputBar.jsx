@@ -1,8 +1,22 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { IconArrowUp } from './icons'
 
 export default function InputBar({ onSend, disabled }) {
     // Estado controlado: o valor do textarea é sempre sincronizado com `text`
     const [text, setText] = useState('')
+    const textareaRef = useRef(null)
+
+    // Ajusta a altura do textarea ao conteúdo (cresce até o limite do CSS)
+    function autoGrow(el) {
+        if (!el) return
+        el.style.height = 'auto'
+        el.style.height = `${el.scrollHeight}px`
+    }
+
+    function handleChange(e) {
+        setText(e.target.value)
+        autoGrow(e.target)
+    }
 
     function handleSubmit(e) {
         e.preventDefault()
@@ -11,6 +25,7 @@ export default function InputBar({ onSend, disabled }) {
         if (!trimmed || disabled) return
         onSend(trimmed)
         setText('') // Limpa o campo após enviar
+        if (textareaRef.current) textareaRef.current.style.height = 'auto'
     }
 
     // Permite enviar com Enter (Shift+Enter insere quebra de linha)
@@ -21,26 +36,27 @@ export default function InputBar({ onSend, disabled }) {
     }
 
     return (
-        <form className="input-bar" onSubmit={handleSubmit}>
-            <textarea
-                className="input-bar__textarea"
-                placeholder="Escreva uma mensagem..."
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={disabled}
-                rows={1}
-            />
-            <button
-                className="input-bar__btn"
-                type="submit"
-                disabled={disabled || !text.trim()}
-                aria-label="Enviar"
-            >
-                <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
-                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                </svg>
-            </button>
-        </form>
+        <div className="composer-wrap">
+            <form className="composer" onSubmit={handleSubmit}>
+                <textarea
+                    ref={textareaRef}
+                    className="composer__textarea"
+                    placeholder="Envie uma mensagem para o Dealni..."
+                    value={text}
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
+                    disabled={disabled}
+                    rows={1}
+                />
+                <button
+                    className="composer__send"
+                    type="submit"
+                    disabled={disabled || !text.trim()}
+                    aria-label="Enviar mensagem"
+                >
+                    <IconArrowUp size={20} />
+                </button>
+            </form>
+        </div>
     )
 }

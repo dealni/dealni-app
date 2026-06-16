@@ -7,7 +7,7 @@ export default function MemoriaList({ memorias, onEditar, onExcluir }) {
     if (!memorias.length) {
         return (
             <p className="lista-vazia">
-                Nenhuma memória ainda. Cadastre uma acima para o Dealni começar a lembrar. 🧠
+                Nenhuma memória ainda. Cadastre uma acima para o Dealni começar a lembrar.
             </p>
         )
     }
