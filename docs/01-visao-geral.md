@@ -2,9 +2,16 @@
 
 ## O que é o Dealni Chat?
 
-O **Dealni Chat** é uma aplicação web de chat em tempo real que permite o usuário conversar com o **Dealni** — um assistente de inteligência artificial com personalidade de gato, integrado à API da OpenAI.
+O **Dealni Chat** é uma aplicação web que permite o usuário conversar com o **Dealni** — um
+assistente de inteligência artificial com personalidade de gato, integrado à API da OpenAI.
 
-A interface é inspirada no Telegram: tema escuro, bolhas de mensagem, avatar, indicador de "digitando..." e persistência do histórico entre sessões.
+Além do chat, o sistema tem várias páginas: o usuário pode **organizar suas conversas** e
+**cadastrar memórias** (fatos que o Dealni passa a lembrar). As conversas e memórias são
+gerenciadas por uma **API RESTful própria** (back-end em Express) com CRUD completo, enquanto o
+histórico das mensagens fica no `localStorage` do navegador.
+
+A interface é inspirada no Telegram: tema escuro, bolhas de mensagem, avatar e indicador de
+"digitando...".
 
 ---
 
@@ -13,9 +20,11 @@ A interface é inspirada no Telegram: tema escuro, bolhas de mensagem, avatar, i
 | Tecnologia | Para quê serve |
 |---|---|
 | **React 19** | Biblioteca JavaScript para construir a interface |
+| **React Router** | Navegação entre as páginas (Chat, Conversas, Memórias, Sobre) |
 | **Vite 8** | Ferramenta que executa e compila o projeto em desenvolvimento |
+| **Express** | Back-end: API RESTful com CRUD de conversas e memórias |
 | **OpenAI API** | Serviço de IA que gera as respostas do Dealni |
-| **localStorage** | Armazenamento do histórico no navegador do usuário |
+| **localStorage** | Armazenamento do histórico de mensagens no navegador |
 | **CSS puro** | Estilização completa da interface |
 
 ---
@@ -26,33 +35,43 @@ A interface é inspirada no Telegram: tema escuro, bolhas de mensagem, avatar, i
 dealni-app/
 │
 ├── index.html              ← Página HTML única (SPA — Single Page Application)
-├── vite.config.js          ← Configuração do Vite
+├── vite.config.js          ← Configuração do Vite (inclui proxy /api → back-end)
 ├── package.json            ← Dependências e scripts do projeto
 ├── .env                    ← Chave secreta da API (não vai para o GitHub)
 │
-├── public/                 ← Arquivos estáticos públicos
+├── backend/                ← API RESTful em Express (CRUD de conversas e memórias)
+│   ├── server.js           ← Cria o app, CORS e monta as rotas
+│   ├── db.js               ← "Banco" baseado em arquivo JSON
+│   ├── data.json           ← Onde os dados ficam salvos
+│   └── routes/             ← Rotas REST: memorias.js e conversas.js
 │
 └── src/                    ← Todo o código-fonte React
     │
-    ├── main.jsx            ← Ponto de entrada: monta o App no HTML
-    ├── index.css           ← Reset CSS global (zeragem de margens/padding)
+    ├── main.jsx            ← Ponto de entrada (envolve o App no BrowserRouter)
+    ├── App.jsx             ← Shell de layout: Navbar + roteamento das páginas
+    ├── App.css             ← Estilos de toda a aplicação
     │
-    ├── App.jsx             ← Componente raiz: gerencia todo o estado do chat
-    ├── App.css             ← Estilos de todos os componentes
+    ├── pages/              ← Uma página por rota
+    │   ├── ChatPage.jsx        ← Conversa com o Dealni
+    │   ├── ConversasPage.jsx   ← CRUD de conversas
+    │   ├── MemoriasPage.jsx    ← CRUD de memórias
+    │   └── SobrePage.jsx       ← Sobre o projeto
     │
-    ├── assets/
-    │   └── hero.jpg        ← Foto do avatar do Dealni
+    ├── components/         ← Componentes visuais (Navbar, Header, ChatWindow,
+    │                          MemoriaForm, MemoriaList, ConversaList, ErrorBanner...)
     │
-    ├── components/         ← Componentes visuais separados por responsabilidade
-    │   ├── Header.jsx          ← Cabeçalho com nome e avatar
-    │   ├── ChatWindow.jsx      ← Área de rolagem das mensagens
-    │   ├── MessageBubble.jsx   ← Bolha individual de mensagem
-    │   ├── TypingIndicator.jsx ← Animação "Dealni está digitando..."
-    │   └── InputBar.jsx        ← Campo de texto e botão de enviar
+    ├── hooks/              ← Hooks customizados (useMemorias, useConversas)
     │
-    └── services/
-        └── openai.js       ← Toda a lógica de comunicação com a API da OpenAI
+    └── services/           ← Lógica de dados separada da tela
+        ├── api.js              ← Wrapper base do fetch (com tratamento de erro)
+        ├── memoriasService.js  ← Chamadas CRUD de /memorias
+        ├── conversasService.js ← Chamadas CRUD de /conversas
+        ├── chatStorage.js      ← Histórico das mensagens no localStorage
+        └── openai.js           ← Comunicação com a API da OpenAI
 ```
+
+> Detalhes das páginas e do CRUD em [09-crud-e-paginas.md](09-crud-e-paginas.md);
+> detalhes da API em [08-backend-api.md](08-backend-api.md).
 
 ---
 
@@ -81,17 +100,18 @@ Usuário digita mensagem
 ## Como rodar o projeto
 
 ```bash
-# 1. Instalar dependências
+# 1. Instalar dependências (front e back)
 npm install
+npm install --prefix backend
 
 # 2. Criar o arquivo .env com a chave da OpenAI
-# (o arquivo já existe no projeto)
+cp .env.example .env   # e preencher VITE_OPENAI_API_KEY
 
-# 3. Iniciar o servidor de desenvolvimento
-npm run dev
+# 3. Iniciar front-end + back-end juntos
+npm run dev:all
 
 # 4. Abrir no navegador
-# http://localhost:5173
+# Front: http://localhost:5173   |   API: http://localhost:3001
 ```
 
 ---
