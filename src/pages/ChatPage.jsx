@@ -19,7 +19,7 @@ export default function ChatPage({ activeConversa, onSelecionar }) {
     const [conversa, setConversa] = useState(activeConversa)
     // Mensagens da conversa atual (carregadas do localStorage)
     const [messages, setMessages] = useState([])
-    // Memórias do usuário (vêm da API) — injetadas no system prompt
+    // Memórias do usuário (vêm da API) - injetadas no system prompt
     const [memorias, setMemorias] = useState([])
     const [isTyping, setIsTyping] = useState(false)
     const [error, setError] = useState(null)

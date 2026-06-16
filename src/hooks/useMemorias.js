@@ -14,7 +14,7 @@ export function useMemorias() {
     const [carregando, setCarregando] = useState(true)
     const [erro, setErro] = useState(null)
 
-    // READ — carrega a lista do servidor
+    // READ - carrega a lista do servidor
     const carregar = useCallback(async () => {
         setCarregando(true)
         setErro(null)

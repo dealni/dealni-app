@@ -1,4 +1,4 @@
-# Dealni — Chat Web 😼
+# Dealni - Chat Web
 
 Chat web com o **Dealni**, um assistente de IA com personalidade de gato, construído com
 **React + Vite** e a **API da OpenAI**. O projeto evolui ao longo das três sprints da disciplina
@@ -7,6 +7,10 @@ de Desenvolvimento Front-End II:
 - **Sprint 1 (N1):** chat React com componentes, estado e eventos.
 - **Sprint 2 (N2):** múltiplas páginas, navegação, formulário controlado, listagem e `localStorage`.
 - **Sprint 3 (N3):** consumo de uma **API RESTful** própria com **CRUD completo** (conversas e memórias).
+
+>**Novo por aqui ou quer entender tudo do zero?** Leia o
+> [Guia Completo do Sistema](docs/00-guia-completo.md) - explica os conceitos (front, back, API,
+> React) e percorre **cada arquivo de código** de forma didática.
 
 ## Arquitetura
 
@@ -57,20 +61,20 @@ npm run dev:all
 Ou, em dois terminais separados:
 
 ```bash
-npm run dev     # terminal 1 — front-end (Vite)
-npm run api     # terminal 2 — back-end (Express)
+npm run dev     # terminal 1 - front-end (Vite)
+npm run api     # terminal 2 - back-end (Express)
 ```
 
 > O Vite faz proxy de `/api/*` para o back-end (porta 3001), então não há problema de CORS.
 
 ## Funcionalidades
 
-- 💬 **Chat** com o Dealni (gpt-4.1-nano), com histórico por conversa salvo no `localStorage`.
-- 🗂️ **Conversas** — criar, abrir, renomear e excluir (CRUD via API REST).
-- 🧠 **Memórias** — cadastrar fatos que o Dealni lembra; são injetados no contexto da IA (CRUD via API REST).
-- 🧭 **Navegação** entre 4 páginas (Chat, Conversas, Memórias, Sobre).
-- ⚠️ **Tratamento de erros** de rede/API visível ao usuário (banner com "tentar de novo").
-- 📱 Design responsivo, tema escuro inspirado no Telegram.
+- **Chat** com o Dealni (gpt-4.1-nano), com histórico por conversa salvo no `localStorage`.
+- **Conversas** - criar, abrir, renomear e excluir (CRUD via API REST).
+- **Memórias** - cadastrar fatos que o Dealni lembra; são injetados no contexto da IA (CRUD via API REST).
+- **Navegação** entre 3 páginas (Chat, Conversas, Memórias).
+- **Tratamento de erros** de rede/API visível ao usuário (banner com "tentar de novo").
+- Design responsivo, com tema claro (estilo Claude) e escuro (estilo ChatGPT).
 
 ## Scripts
 
@@ -86,10 +90,10 @@ npm run api     # terminal 2 — back-end (Express)
 
 Recursos com CRUD completo (`GET`, `POST`, `PUT`, `DELETE`):
 
-- `/memorias` — `{ id, titulo, categoria, conteudo, criadaEm }`
-- `/conversas` — `{ id, titulo, criadaEm, atualizadaEm }`
+- `/memorias` - `{ id, titulo, categoria, conteudo, criadaEm }`
+- `/conversas` - `{ id, titulo, criadaEm, atualizadaEm }`
 
-Detalhes em [docs/08-backend-api.md](docs/08-backend-api.md).
+Detalhes (e explicação completa de todo o sistema) no [Guia Completo do Sistema](docs/00-guia-completo.md).
 
 ## Tecnologias
 

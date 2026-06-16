@@ -1,5 +1,5 @@
 // Formulário controlado de memória (cria uma nova ou edita uma existente).
-// Todos os campos são controlados por useState — o React é a "fonte da verdade".
+// Todos os campos são controlados por useState - o React é a "fonte da verdade".
 // Campos: título (texto), categoria (select) e conteúdo (textarea) = 3 campos controlados.
 
 import { useState, useEffect } from 'react'

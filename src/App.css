@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   Dealni — Design system inspirado em Claude (claro) e ChatGPT (escuro)
+   Dealni - Design system inspirado em Claude (claro) e ChatGPT (escuro)
    • Tema claro  → cream + coral (Claude)
    • Tema escuro → #212121 neutro (ChatGPT)
    Trocado via <html data-theme="light|dark"> (ver hooks/useTheme.js)
@@ -131,7 +131,7 @@ button {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Sidebar (estilo Claude/ChatGPT — coluna fixa à esquerda)
+   Sidebar (estilo Claude/ChatGPT - coluna fixa à esquerda)
    ═══════════════════════════════════════════════════════════ */
 .sidebar {
     width: 264px;
@@ -353,7 +353,7 @@ button {
     gap: 4px;
 }
 
-/* Janela de mensagens — rolável, conteúdo centralizado e estreito */
+/* Janela de mensagens - rolável, conteúdo centralizado e estreito */
 .chat-window {
     flex: 1;
     overflow-y: auto;

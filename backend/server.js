@@ -14,7 +14,7 @@ app.use(cors())
 // Interpreta o corpo das requisições como JSON
 app.use(express.json())
 
-// Rota de saúde — útil para checar rapidamente se a API está no ar
+// Rota de saúde - útil para checar rapidamente se a API está no ar
 app.get('/', (req, res) => {
     res.json({
         nome: 'Dealni API',
@@ -33,5 +33,5 @@ app.use((req, res) => {
 })
 
 app.listen(PORT, () => {
-    console.log(`🐱 Dealni API rodando em http://localhost:${PORT}`)
+    console.log(`Dealni API rodando em http://localhost:${PORT}`)
 })

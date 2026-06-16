@@ -12,7 +12,7 @@ export default function ConversasPage({ activeConversa, onSelecionar }) {
     const [acaoErro, setAcaoErro] = useState(null)
     const navigate = useNavigate()
 
-    // CREATE — cria uma conversa a partir do campo controlado
+    // CREATE - cria uma conversa a partir do campo controlado
     async function handleCriar(e) {
         e.preventDefault()
         if (!titulo.trim()) return
@@ -31,7 +31,7 @@ export default function ConversasPage({ activeConversa, onSelecionar }) {
         navigate('/')
     }
 
-    // UPDATE — renomeia
+    // UPDATE - renomeia
     async function handleRenomear(conversa) {
         const novo = window.prompt('Novo título da conversa:', conversa.titulo)
         if (!novo?.trim()) return
@@ -48,7 +48,7 @@ export default function ConversasPage({ activeConversa, onSelecionar }) {
         }
     }
 
-    // DELETE — exclui a conversa e limpa as mensagens locais dela
+    // DELETE - exclui a conversa e limpa as mensagens locais dela
     async function handleExcluir(conversa) {
         if (!window.confirm(`Excluir a conversa "${conversa.titulo}"?`)) return
         setAcaoErro(null)

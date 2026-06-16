@@ -1,7 +1,7 @@
 {
   "name": "dealni-backend",
   "version": "1.0.0",
-  "description": "API RESTful do Dealni Chat — CRUD de memórias e conversas",
+  "description": "API RESTful do Dealni Chat - CRUD de memórias e conversas",
   "type": "module",
   "main": "server.js",
   "scripts": {

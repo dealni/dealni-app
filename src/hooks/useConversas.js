@@ -13,7 +13,7 @@ export function useConversas() {
     const [carregando, setCarregando] = useState(true)
     const [erro, setErro] = useState(null)
 
-    // READ — carrega a lista do servidor
+    // READ - carrega a lista do servidor
     const carregar = useCallback(async () => {
         setCarregando(true)
         setErro(null)
@@ -30,7 +30,7 @@ export function useConversas() {
         carregar()
     }, [carregar])
 
-    // CREATE — retorna a conversa criada (para já abri-la, por exemplo)
+    // CREATE - retorna a conversa criada (para já abri-la, por exemplo)
     async function adicionar(titulo) {
         const nova = await createConversa(titulo)
         setConversas((prev) => [...prev, nova])

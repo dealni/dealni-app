@@ -19,7 +19,7 @@ function formatMemorias(memorias = []) {
     return `\n\nMEMÓRIAS sobre o usuário (use quando for relevante):\n${lista}`
 }
 
-// Personalidade do Dealni — enviada em toda requisição como instrução ao modelo
+// Personalidade do Dealni - enviada em toda requisição como instrução ao modelo
 function getSystemPrompt(memorias = []) {
     const now = new Date().toLocaleString('pt-BR', {
         timeZone: 'America/Sao_Paulo',

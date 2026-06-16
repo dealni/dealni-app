@@ -11,7 +11,7 @@ export default function MemoriasPage() {
     const [emEdicao, setEmEdicao] = useState(null)
     const [acaoErro, setAcaoErro] = useState(null)
 
-    // CREATE / UPDATE — o mesmo formulário cuida dos dois casos
+    // CREATE / UPDATE - o mesmo formulário cuida dos dois casos
     async function handleSalvar(dados) {
         setAcaoErro(null)
         if (emEdicao) {

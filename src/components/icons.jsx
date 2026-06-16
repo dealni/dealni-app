@@ -1,5 +1,5 @@
 // Conjunto de ícones SVG (estilo Lucide, traço 1.8, viewBox 24x24).
-// Substituem os emojis usados como ícones — visual mais próximo de Claude/ChatGPT.
+// Substituem os emojis usados como ícones - visual mais próximo de Claude/ChatGPT.
 // Todos herdam a cor via `currentColor` e o tamanho via prop `size`.
 
 function Svg({ size = 20, children, ...props }) {

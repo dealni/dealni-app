@@ -1,4 +1,4 @@
-// Banner de erro reutilizável — mostra erros de rede/API de forma visível ao usuário.
+// Banner de erro reutilizável - mostra erros de rede/API de forma visível ao usuário.
 // Aceita um callback opcional para "tentar de novo".
 export default function ErrorBanner({ mensagem, onRetry }) {
     if (!mensagem) return null

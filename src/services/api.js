@@ -21,7 +21,7 @@ async function request(caminho, opcoes = {}) {
         throw new Error(NETWORK_ERROR)
     }
 
-    // DELETE retorna 204 (sem corpo) — sucesso sem JSON para ler
+    // DELETE retorna 204 (sem corpo) - sucesso sem JSON para ler
     if (response.status === 204) return null
 
     let dados = null
