@@ -9,8 +9,18 @@ const MSG_LIMIT = 4096
 // Limite de mensagens enviadas como contexto para não estourar tokens
 const CONTEXT_LIMIT = 20
 
+// Monta o bloco de memórias para injetar no system prompt.
+// As memórias vêm do CRUD (API REST) e fazem o Dealni "lembrar" de fatos do usuário.
+function formatMemorias(memorias = []) {
+    if (!memorias.length) return ''
+    const lista = memorias
+        .map((m) => `- ${m.titulo}: ${m.conteudo}`)
+        .join('\n')
+    return `\n\nMEMÓRIAS sobre o usuário (use quando for relevante):\n${lista}`
+}
+
 // Personalidade do Dealni — enviada em toda requisição como instrução ao modelo
-function getSystemPrompt() {
+function getSystemPrompt(memorias = []) {
     const now = new Date().toLocaleString('pt-BR', {
         timeZone: 'America/Sao_Paulo',
         day: '2-digit', month: '2-digit', year: 'numeric',
@@ -27,7 +37,7 @@ INSTRUÇÕES:
 - Use emojis de forma natural e moderada
 - Seja útil, amigável e direto
 
-Data e hora em São Paulo: ${now}`
+Data e hora em São Paulo: ${now}${formatMemorias(memorias)}`
 }
 
 // Corta mensagens que ultrapassam o limite de caracteres (igual ao bot)
@@ -38,14 +48,15 @@ function truncate(text) {
     return lastSpace > 0 ? cut.substring(0, lastSpace) : cut
 }
 
-// Recebe o histórico completo da conversa e retorna a resposta do Dealni
-export async function sendMessage(history) {
+// Recebe o histórico completo da conversa (e as memórias do usuário) e
+// retorna a resposta do Dealni.
+export async function sendMessage(history, memorias = []) {
     // Usa apenas as últimas CONTEXT_LIMIT mensagens para não estourar tokens
     const recent = history.slice(-CONTEXT_LIMIT)
 
     // Monta o array de mensagens no formato exigido pela API da OpenAI
     const messages = [
-        { role: 'system', content: getSystemPrompt() },
+        { role: 'system', content: getSystemPrompt(memorias) },
         // Converte o histórico interno para o formato { role, content }
         ...recent.map((msg) => ({
             role: msg.from === 'user' ? 'user' : 'assistant',
