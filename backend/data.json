@@ -1,0 +1,26 @@
+{
+  "memorias": [
+    {
+      "id": 1,
+      "titulo": "Nome do usuário",
+      "categoria": "pessoal",
+      "conteudo": "O usuário se chama Diogo e gosta de ser chamado pelo primeiro nome.",
+      "criadaEm": "2026-06-16T12:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "titulo": "Linguagem favorita",
+      "categoria": "preferencia",
+      "conteudo": "O usuário programa em JavaScript e está aprendendo React.",
+      "criadaEm": "2026-06-16T12:00:00.000Z"
+    }
+  ],
+  "conversas": [
+    {
+      "id": 1,
+      "titulo": "Primeira conversa",
+      "criadaEm": "2026-06-16T12:00:00.000Z",
+      "atualizadaEm": "2026-06-16T12:00:00.000Z"
+    }
+  ]
+}
